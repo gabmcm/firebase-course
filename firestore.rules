@@ -17,6 +17,17 @@ service cloud.firestore {
     }
 
     // Add new rules here
-   
+
+    //Allow users to create, delete, update, and see their own to-do items
+    match /todos/{todo}{
+      allow read, write, create, delete: if request.auth != null;
+    }
+
+    match /users/{userId} {
+      //Allow admin to edit and delete users
+      allow write, delete, update: if request.auth != null && (request.auth.uid == userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin);
+      //Allow authenticated users to view other users and create a new user
+      allow read, create: if request.auth != null;
+    }
   }
 }

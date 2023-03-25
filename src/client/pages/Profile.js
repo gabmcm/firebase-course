@@ -9,6 +9,7 @@ import { useUser } from '../components/user-context';
 import LoadingError from '../components/LoadingError';
 import Card from '../components/Card';
 import ProfileForm from '../components/ProfileForm';
+import AdminToggle from '../components/AdminToggle';
 
 const Profile = () => {
   const { user } = useUser();
@@ -51,6 +52,21 @@ const Profile = () => {
                 userDoc={userDoc}
                 isCurrentUser={userDoc.uid === user.uid}
                 adminMode={adminMode}
+              />
+            </Card>
+          </>
+        )}
+      </LoadingError>
+
+      <LoadingError data={userDoc} loading={loading} error={error}>
+        {adminMode && (
+          <>
+            <Card>
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                {`Edit ${userDoc?.uid === user.uid ? 'your' : 'user'} admin status`}
+              </h3>
+              <AdminToggle 
+                userDoc={userDoc} 
               />
             </Card>
           </>
